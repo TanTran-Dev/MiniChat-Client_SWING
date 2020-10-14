@@ -25,11 +25,11 @@ public class ClientFrame extends JFrame implements Runnable {
     private JPanel panelConfig;
     // End of variables declaration
     private List<String> messages;
-    DatagramSocket clientSocket;
-    InetAddress IPAddress;
+    private DatagramSocket clientSocket;
+    private InetAddress IPAddress;
 
-    String requestToServer = "";
-    String response = "";
+    private String requestToServer = "";
+    private String response = "";
 
     private Thread thread;
     private boolean isRunning;
