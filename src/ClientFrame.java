@@ -33,6 +33,7 @@ public class ClientFrame extends JFrame implements Runnable {
 
     private Thread thread;
     private boolean isRunning;
+    private boolean isConnected;
     private DefaultListModel<String> listModel;
 
     public ClientFrame() {
@@ -229,26 +230,58 @@ public class ClientFrame extends JFrame implements Runnable {
     }
 
     private void btnSaveActionPerformed(ActionEvent event) throws IOException {
-        String ipAddress = edtIPAddressReceiver.getText().trim();
-        connectToServer(ipAddress);
+        if (!edtIPAddressReceiver.getText().isEmpty()) {
+            String ipAddress = edtIPAddressReceiver.getText().trim();
+            if (!edtPort.getText().isEmpty()) {
+                int port = Integer.parseInt(edtPort.getText().trim());
+                connectToServer(ipAddress, port);
+            } else {
+                JOptionPane.showMessageDialog(null, "Port không được để trống");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "IP không được để trống");
+        }
     }
 
     private void btnSendActionPerformed(ActionEvent event) {
-        sendData();
-        edtInputMessage.setText("");
+        if (isConnected) {
+            if (!edtIPAddressReceiver.getText().isEmpty()) {
+                if (!edtPort.getText().isEmpty()) {
+                    sendData();
+                    edtInputMessage.setText("");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Nhập PORT!!!");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Nhập IP!!!");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Thiết bị chưa được kết nối, không thể nhắn tin.");
+        }
     }
 
-    private void connectToServer(String ipAddress) throws IOException {
+    private void connectToServer(String ipAddress, Integer port) throws IOException {
         clientSocket = new DatagramSocket();
-        IPAddress = InetAddress.getByName(ipAddress);
-        startThread();
+
+        if (ipAddress != null) {
+            if (port != null) {
+                IPAddress = InetAddress.getByName(ipAddress);
+                startThread();
+                JOptionPane.showMessageDialog(null, "Kết nối tới địa chỉ: " + IPAddress + " thành công");
+                isConnected = true;
+            } else {
+                JOptionPane.showMessageDialog(null, "Kết nối không thành công do thiếu Port");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Kết nối không thành công do thiếu IP máy chủ");
+        }
     }
 
-    private void sendData(){
+    private void sendData() {
         byte[] sendData;
 
+        String senderName = IPAddress.getHostName();
         if (edtSenderName.getText().isEmpty()) {
-            String senderName = IPAddress.getHostName();
             requestToServer = senderName + ": " + edtInputMessage.getText().trim();
         } else {
             requestToServer = edtSenderName.getText() + ": " + edtInputMessage.getText().trim();
@@ -257,8 +290,9 @@ public class ClientFrame extends JFrame implements Runnable {
         messages.add(requestToServer);
 
         sendData = requestToServer.getBytes();
+
         int port = Integer.parseInt(edtPort.getText().trim());
-        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port );
+        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
         try {
             clientSocket.send(sendPacket);
         } catch (IOException e) {
@@ -266,7 +300,7 @@ public class ClientFrame extends JFrame implements Runnable {
         }
     }
 
-    private void receiveData(){
+    private void receiveData() {
         byte[] receiveData = new byte[1024];
         DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
         try {
