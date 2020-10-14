@@ -267,7 +267,7 @@ public class ClientFrame extends JFrame implements Runnable {
             if (port != null) {
                 IPAddress = InetAddress.getByName(ipAddress);
                 startThread();
-                JOptionPane.showMessageDialog(null, "Kết nối tới địa chỉ: " + IPAddress + " thành công");
+                JOptionPane.showMessageDialog(null, "Kết nối tới địa chỉ: " + IPAddress + ":" + port + " thành công");
                 isConnected = true;
             } else {
                 JOptionPane.showMessageDialog(null, "Kết nối không thành công do thiếu Port");
