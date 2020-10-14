@@ -92,7 +92,7 @@ public class ClientFrame extends JFrame implements Runnable {
             }
         });
 
-        btnSave.setText("Lưu");
+        btnSave.setText("Kết nối");
         btnSave.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 try {
@@ -230,8 +230,7 @@ public class ClientFrame extends JFrame implements Runnable {
 
     private void btnSaveActionPerformed(ActionEvent event) throws IOException {
         String ipAddress = edtIPAddressReceiver.getText().trim();
-        int port = Integer.parseInt(edtPort.getText().trim());
-        connectToServer(ipAddress, port);
+        connectToServer(ipAddress);
     }
 
     private void btnSendActionPerformed(ActionEvent event) {
@@ -239,7 +238,7 @@ public class ClientFrame extends JFrame implements Runnable {
         edtInputMessage.setText("");
     }
 
-    private void connectToServer(String ipAddress, int port) throws IOException {
+    private void connectToServer(String ipAddress) throws IOException {
         clientSocket = new DatagramSocket();
         IPAddress = InetAddress.getByName(ipAddress);
         startThread();
