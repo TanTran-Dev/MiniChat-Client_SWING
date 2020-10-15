@@ -244,7 +244,7 @@ public class ClientFrame extends JFrame implements Runnable {
     }
 
     private void btnSendActionPerformed(ActionEvent event) {
-        if (isConnected) {
+        if(!edtInputMessage.getText().isEmpty()) {
             if (!edtIPAddressReceiver.getText().isEmpty()) {
                 if (!edtPort.getText().isEmpty()) {
                     sendData();
@@ -255,8 +255,8 @@ public class ClientFrame extends JFrame implements Runnable {
             } else {
                 JOptionPane.showMessageDialog(null, "Nhập IP!!!");
             }
-        } else {
-            JOptionPane.showMessageDialog(null, "Thiết bị chưa được kết nối, không thể nhắn tin.");
+        }else {
+            JOptionPane.showMessageDialog(null, "Nhập Message!!!");
         }
     }
 
